@@ -106,3 +106,470 @@ app.compo.css
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+display info
+
+css
+/* display-info.component.css */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Add styles for displaying user information */
+
+
+
+html
+<!-- display-info.component.html -->
+<div class="container">
+    <h2>Available Information</h2>
+    <div>
+      <strong>Username:</strong> {{ user.username }}
+    </div>
+    <div *ngIf="user.name">
+      <strong>Name:</strong> {{ user.name }}
+    </div>
+    <div *ngIf="user.phone">
+      <strong>Phone:</strong> {{ user.phone }}
+    </div>
+    <div *ngIf="user.dob">
+      <strong>Date of Birth:</strong> {{ user.dob }}
+    </div>
+    <div *ngIf="user.address">
+      <strong>Address:</strong> {{ user.address }}
+    </div>
+  </div>
+
+
+
+ts
+
+// display-info.component.ts
+import { Component, OnInit } from '@angular/core';
+import { UserService } from '../user.service';
+
+@Component({
+  selector: 'app-display-info',
+  templateUrl: './display-info.component.html',
+  styleUrls: ['./display-info.component.css'],
+})
+export class DisplayInfoComponent implements OnInit {
+  user: any = {};
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    // Subscribe to changes in user details
+    this.userService.user$.subscribe((updatedUser: any) => {
+      this.user = updatedUser;
+    });
+
+    // Initialize user details
+    this.user = this.userService.getUser();
+  }
+
+}
+
+
+
+
+
+register login
+
+
+css 
+
+/* register-login.component.css */
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+
+
+
+html
+
+
+<!-- register-login.component.html -->
+<div class="container">
+    <h2>Login or Register</h2>
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" [(ngModel)]="username" required>
+  
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" [(ngModel)]="password" required>
+  
+      <button type="submit">Login</button>
+      <button type="button" (click)="register()">Register</button>
+    </form>
+  </div>
+
+
+
+
+ts
+
+
+// register-login.component.ts
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from '../user.service';
+
+@Component({
+  selector: 'app-register-login',
+  templateUrl: './register-login.component.html',
+  styleUrls: ['./register-login.component.css'],
+})
+export class RegisterLoginComponent {
+  username: string = '';
+  password: string = '';
+
+  constructor(private userService: UserService, private router: Router) {}
+
+  onSubmit() {
+    // Perform login logic (authentication with a backend service)
+    // For simplicity, assume the login is successful
+    const userDetails = {
+      username: this.username,
+      // Add other user details here
+    };
+
+    this.userService.updateUser(userDetails);
+    this.router.navigate(['/display-info']);
+  }
+
+  register() {
+    // Perform registration logic (registration with a backend service)
+    // For simplicity, assume the registration is successful
+    const userDetails = {
+      username: this.username,
+      // Add other user details here
+    };
+
+    this.userService.updateUser(userDetails);
+    this.router.navigate(['/display-info']);
+  }
+}
+
+
+
+
+update
+
+
+css
+/* update-services.component.css */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input,
+  textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+
+
+
+html
+
+<!-- update-services.component.html -->
+<div class="container">
+    <h2>Update Services</h2>
+    <form (ngSubmit)="onUpdate()">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="name">
+  
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" [(ngModel)]="phone">
+  
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" [(ngModel)]="dob">
+  
+      <label for="address">Address:</label>
+      <textarea id="address" name="address" [(ngModel)]="address"></textarea>
+  
+      <button type="submit">Update</button>
+    </form>
+  </div>
+
+
+ts
+
+// update-services.component.ts
+import { Component } from '@angular/core';
+import { UserService } from '../user.service';
+
+@Component({
+  selector: 'app-update-services',
+  templateUrl: './update-services.component.html',
+  styleUrls: ['./update-services.component.css'],
+})
+export class UpdateServicesComponent {
+  name: string = '';
+  phone: string = '';
+  dob: string = '';
+  address: string = '';
+
+  constructor(private userService: UserService) {}
+
+  onUpdate() {
+    const updatedUserDetails = {
+      name: this.name,
+      phone: this.phone,
+      dob: this.dob,
+      address: this.address,
+    };
+
+    this.userService.updateUser(updatedUserDetails);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+app routing
+
+
+// app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { RegisterLoginComponent } from './register-login/register-login.component';
+import { DisplayInfoComponent } from './display-info/display-info.component';
+import { UpdateServicesComponent } from './update-services/update-services.component';
+
+const routes: Routes = [
+  { path: 'login', component: RegisterLoginComponent },
+  { path: 'display-info', component: DisplayInfoComponent },
+  { path: 'update-services', component: UpdateServicesComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+
+
+
+
+app css
+
+
+/* app.component.css */
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  nav {
+    background-color: #343a40;
+    padding: 15px;
+    box-shadow: 0 4px 2px -2px gray;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  nav ul li {
+    margin-right: 20px;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+  
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .active {
+    text-decoration: underline;
+  }
+
+
+
+app html
+
+
+<!-- app.component.html -->
+<div>
+  <nav>
+    <ul>
+      <li><a routerLink="/login" routerLinkActive="active">Login/Register</a></li>
+      <li><a routerLink="/display-info" routerLinkActive="active">Display Information</a></li>
+      <li><a routerLink="/update-services" routerLinkActive="active">Update Services</a></li>
+    </ul>
+  </nav>
+  <router-outlet></router-outlet>
+</div>
+
+
+spec
+
+
+import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppComponent } from './app.component';
+
+describe('AppComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule
+      ],
+      declarations: [
+        AppComponent
+      ],
+    }).compileComponents();
+  });
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  it(`should have as title 'myapp'`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('myapp');
+  });
+
+  it('should render title', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, myapp');
+  });
+});
+
+
+
+ts
+
+// app.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+}
+
+
+
+
